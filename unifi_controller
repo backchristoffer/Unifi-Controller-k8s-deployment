@@ -1,0 +1,106 @@
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: unifi-service
+  labels:
+    app: unifi-controller
+spec:
+  type: ClusterIP
+  selector:
+    app: unifi-controller
+  ports:
+    - name: '3478'
+      protocol: UDP
+      port: 3478
+      targetPort: 3478
+    - name: '8080'
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: '8443'
+      protocol: TCP
+      port: 8443
+      targetPort: 8443
+    - name: '8843'
+      protocol: TCP
+      port: 8843
+      targetPort: 8843
+    - name: '8880'
+      protocol: TCP
+      port: 8880
+      targetPort: 8880
+    - name: '6789'
+      protocol: TCP
+      port: 6789
+      targetPort: 6789
+---
+# USE THIS INSTEAD OF INGRESS
+kind: Service
+apiVersion: v1
+metadata:
+  name: unifi-nodeport
+spec:
+  selector:
+    app: unifi-controller
+  ports:
+  - protocol: TCP
+    name: '8443'
+    port: 8443
+    nodePort: 32321
+  - protocol: TCP
+    name: '8080'
+    port: 8080
+    nodePort: 32322
+  type: NodePort
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unifi-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 5Gi
+
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unifi-deployment
+spec:
+  selector:
+    matchLabels:
+      app: unifi-controller
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: unifi-controller
+    spec:
+      containers:
+      - name: unifi-controller
+        image: "linuxserver/unifi-controller:arm64v8-7.1.66"
+        ports:
+          - containerPort: 3478
+            protocol: UDP
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8443
+            protocol: TCP
+          - containerPort: 8843
+            protocol: TCP
+          - containerPort: 8880
+            protocol: TCP
+          - containerPort: 6789
+            protocol: TCP
+        volumeMounts:
+        - name: unifi-vol1
+          mountPath: /config
+      volumes:
+      - name: unifi-vol1
+        persistentVolumeClaim:
+          claimName: unifi-pvc

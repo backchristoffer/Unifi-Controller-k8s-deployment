@@ -89,7 +89,7 @@ spec:
     spec:
       containers:
       - name: unifi-controller
-        image: "linuxserver/unifi-controller:arm64v8-7.1.66"
+        image: "linuxserver/unifi-controller:latest"
         ports:
           - containerPort: 3478
             protocol: UDP

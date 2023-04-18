@@ -1,3 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: unifi-controller
+
 --- 
 apiVersion: v1
 kind: Service
@@ -34,6 +39,7 @@ spec:
       protocol: TCP
       port: 6789
       targetPort: 6789
+
 ---
 # SET NODEPORT SERVICE
 kind: Service

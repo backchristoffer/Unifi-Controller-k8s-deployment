@@ -93,7 +93,7 @@ spec:
     spec:
       containers:
       - name: unifi-controller
-        image: "linuxserver/unifi-controller:latest"
+        image: "lscr.io/linuxserver/unifi-network-application:latest"
         ports:
           - containerPort: 3478
             protocol: UDP

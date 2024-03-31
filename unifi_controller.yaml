@@ -7,6 +7,7 @@ metadata:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: unifi-controller
   name: unifi-service
   labels:
     app: unifi-controller
@@ -46,6 +47,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: unifi-nodeport
+  namespace: unifi-controller
 spec:
   selector:
     app: unifi-controller
@@ -64,6 +66,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: unifi-pvc
+  namespace: unifi-controller
 spec:
   accessModes:
     - ReadWriteOnce
@@ -77,6 +80,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: unifi-deployment
+  namespace: unifi-controller
 spec:
   selector:
     matchLabels:
